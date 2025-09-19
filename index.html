@@ -23,43 +23,54 @@
       font-size: 3em;
       margin-bottom: 40px;
       color: #ffcc00;
+      text-shadow: 0 0 5px #000;
     }
 
     .search-container {
       display: flex;
       justify-content: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      border-radius: 30px;
+      overflow: hidden;
     }
 
     input[type="text"] {
       width: 300px;
       padding: 12px 20px;
-      border-radius: 25px 0 0 25px;
       border: none;
       outline: none;
       font-size: 1em;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      text-align: left;
+      background-color: #2a2a2a;
+      color: #fff;
+    }
+
+    input[type="text"]::placeholder {
+      color: #ccc;
     }
 
     button {
-      padding: 12px 20px;
-      border-radius: 0 25px 25px 0;
+      padding: 12px 25px;
       border: none;
       background-color: #ffcc00;
       color: #121212;
       font-weight: bold;
       cursor: pointer;
       transition: 0.3s;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
 
     button:hover {
       background-color: #ffaa00;
     }
+
+    .search-container:focus-within {
+      box-shadow: 0 0 20px #ffcc00;
+    }
   </style>
 </head>
 <body>
-  <h1>Biverimo Arama</h1>
+  <h1>Biverimo</h1>
+
   <div class="search-container">
     <input id="searchInput" type="text" placeholder="Aramak istediğiniz siteyi yazın">
     <button onclick="search()">Ara</button>
@@ -67,6 +78,7 @@
 
   <script>
     const input = document.getElementById("searchInput");
+    const siteName = "Biverimo"; // 5. maddede kullanılacak isim
 
     // Enter tuşu ile arama yapma
     input.addEventListener("keypress", function(e) {
@@ -77,14 +89,13 @@
 
     function search() {
       const query = input.value.trim().toLowerCase();
-
       if(query === "") return;
 
       if(query === "youtube") {
         window.location.href = "https://www.youtube.com/";
       } else {
-        // Google araması
-        const googleUrl = "https://www.google.com/search?q=" + encodeURIComponent(query);
+        // Google araması, arama başlığı Biverimo
+        const googleUrl = "https://www.google.com/search?q=" + encodeURIComponent(siteName + " " + query);
         window.location.href = googleUrl;
       }
     }
