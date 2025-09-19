@@ -4,24 +4,120 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biverimo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to bottom, #1a1a1a, #121212);
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      min-height: 100vh;
-      margin: 0;
+      color: #fff;
     }
 
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(18, 18, 18, 0.85); /* koyu transparan
+    h1 {
+      font-size: 3em;
+      margin-bottom: 30px;
+      color: #ffcc00;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      padding: 12px 20px;
+      border-radius: 25px 0 0 25px;
+      border: none;
+      outline: none;
+      font-size: 1em;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    button {
+      padding: 12px 20px;
+      border-radius: 0 25px 25px 0;
+      border: none;
+      background-color: #ffcc00;
+      color: #121212;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    button:hover {
+      background-color: #ffaa00;
+    }
+
+    .video-list {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .video-item {
+      margin: 10px 0;
+      font-size: 1.2em;
+    }
+
+    a {
+      color: #ffcc00;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Biverimo</h1>
+
+  <div class="search-container">
+    <input id="searchInput" type="text" placeholder="Kanal adı yazın">
+    <button onclick="searchChannel()">Ara</button>
+  </div>
+
+  <div class="video-list" id="videoList">
+    <div class="video-item"><a href="https://www.youtube.com/@OrkunIsitmak" target="_blank">Orkun Işıtmak</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@MrBeast" target="_blank">MrBeast</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@Kayzer" target="_blank">Kayzer</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@Delimine" target="_blank">Delimine</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@Eagle5" target="_blank">Eagle5</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@KizilcikSerbeti" target="_blank">Kızılcık Şerbeti</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@ArkaSokaklar" target="_blank">Arka Sokaklar</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@Sahipsizler" target="_blank">Sahipsizler</a></div>
+  </div>
+
+  <script>
+    function searchChannel() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const list = document.getElementById('videoList');
+      const items = list.getElementsByClassName('video-item');
+      let anyVisible = false;
+
+      for (let i = 0; i < items.length; i++) {
+        const text = items[i].innerText.toLowerCase();
+        if (text.includes(query) && query !== "") {
+          items[i].style.display = "block";
+          anyVisible = true;
+        } else {
+          items[i].style.display = "none";
+        }
+      }
+
+      list.style.display = anyVisible ? "block" : "none";
+    }
+  </script>
+</body>
+</html>
