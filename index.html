@@ -1,53 +1,70 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Biverimo</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        input { padding: 10px; width: 300px; }
-        button { padding: 10px 20px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biverimo</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 30px;
+      color: #ffcc00;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      padding: 12px 20px;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      font-size: 1em;
+      text-align: center;
+    }
+
+    .video-list {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .video-item {
+      margin: 10px 0;
+    }
+
+    a {
+      color: #ffcc00;
+      text-decoration: none;
+      font-size: 1.1em;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <h1>Biverimo Arama Motoru</h1>
+  <h1>Biverimo</h1>
+  <input type="text" placeholder="Aramak istediğiniz videoyu yazın">
 
-    <!-- Arama kutusu -->
-    <input type="text" id="videoSearch" placeholder="YouTube kanalı veya video ara">
-    <button onclick="searchVideo()">Ara</button>
-
-    <script>
-        function searchVideo() {
-            const query = document.getElementById("videoSearch").value.trim();
-            if(query === "") {
-                alert("Lütfen bir isim girin!");
-                return;
-            }
-
-            // Ön tanımlı kanallar ve içerikler
-            const channels = [
-                "Orkun Işıtmak",
-                "MrBeast",
-                "Kayzer",
-                "Eagle5",
-                "Sahipsizler",
-                "Kızılcık Şerbeti",
-                "Arka Sokaklar"
-            ];
-
-            let searchQuery = query;
-
-            // Eğer yazılan kanal veya içerik listede varsa direkt aç
-            if(channels.includes(query)) {
-                searchQuery = query;
-            }
-
-            // YouTube arama linki
-            const youtubeUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent(searchQuery);
-
-            // Yeni sekmede aç
-            window.open(youtubeUrl, "_blank");
-        }
-    </script>
+  <div class="video-list">
+    <div class="video-item"><a href="https://www.youtube.com/@OrkunIsitmak">Orkun Işıtmak</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@MrBeast">MrBeast</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@Kayzer">Kayzer</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@Eagle5">Eagle5</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@Sahipsizler">Sahipsizler</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@KizilcikSerbeti">Kızılcık Şerbeti</a></div>
+    <div class="video-item"><a href="https://www.youtube.com/@ArkaSokaklar">Arka Sokaklar</a></div>
+  </div>
 </body>
 </html>
