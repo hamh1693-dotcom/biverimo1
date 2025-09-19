@@ -6,7 +6,8 @@
   <title>Biverimo</title>
   <style>
     body {
-      background-color: #121212;
+      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+      background-size: cover;
       color: #ffffff;
       font-family: Arial, sans-serif;
       display: flex;
@@ -17,80 +18,10 @@
       margin: 0;
     }
 
-    h1 {
-      font-size: 3em;
-      margin-bottom: 30px;
-      color: #ffcc00;
-    }
-
-    .search-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 40px;
-    }
-
-    input[type="text"] {
-      width: 300px;
-      padding: 12px 20px;
-      border-radius: 25px 0 0 25px;
-      border: none;
-      outline: none;
-      font-size: 1em;
-      text-align: center;
-    }
-
-    button {
-      padding: 12px 20px;
-      border-radius: 0 25px 25px 0;
-      border: none;
-      background-color: #ffcc00;
-      color: #121212;
-      font-size: 1em;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #ffaa00;
-    }
-
-    .video-list {
-      text-align: center;
-    }
-
-    .video-item {
-      margin: 10px 0;
-    }
-
-    a {
-      color: #ffcc00;
-      text-decoration: none;
-      font-size: 1.1em;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
-  <h1>Biverimo</h1>
-
-  <div class="search-container">
-    <input type="text" placeholder="Aramak istediğiniz videoyu yazın">
-    <button>Ara</button>
-  </div>
-
-  <div class="video-list">
-    <div class="video-item"><a href="https://www.youtube.com/@OrkunIsitmak">Orkun Işıtmak</a></div>
-    <div class="video-item"><a href="https://www.youtube.com/@MrBeast">MrBeast</a></div>
-    <div class="video-item"><a href="https://www.youtube.com/@Kayzer">Kayzer</a></div>
-   
-
-
-
-
-
-
-
-اطرح سؤالك على ChatGPT
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(18, 18, 18, 0.85); /* koyu transparan
