@@ -12,7 +12,7 @@
     height:100vh;
     display:flex;
     flex-direction:column;
-    justify-content:center;
+    justify-content:flex-start;
     align-items:center;
     background:#f8f9fa;
     font-family:'Roboto', sans-serif;
@@ -20,8 +20,8 @@
   h1 {
     font-size:4em;
     font-weight:700;
-    margin-bottom:40px;
-    color:#4285f4; /* Google mavisi ama sen istersen değiştirebilirsin */
+    margin:60px 0 40px 0;
+    color:#4285f4;
   }
   .search-container {
     display:flex;
@@ -52,6 +52,22 @@
   button:hover {
     background:#3367d6;
   }
+  .news-section {
+    margin-top:60px;
+    width:80%;
+    max-width:800px;
+  }
+  .news-section h2 {
+    font-size:1.5em;
+    margin-bottom:15px;
+  }
+  .news-item {
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom:10px;
+  }
 </style>
 </head>
 <body>
@@ -59,6 +75,14 @@
   <div class="search-container">
     <input id="searchInput" type="text" placeholder="Ara...">
     <button onclick="search()">Ara</button>
+  </div>
+
+  <div class="news-section">
+    <h2>Haberler</h2>
+    <div class="news-item">📢 Yeni sezon Arka Sokaklar başlıyor!</div>
+    <div class="news-item">🔥 MrBeast’ten devasa yeni video geldi!</div>
+    <div class="news-item">🎥 Orkun Işıtmak yeni içerik paylaştı.</div>
+    <div class="news-item">🎶 Kızılcık Şerbeti fragmanı yayınlandı.</div>
   </div>
 
 <script>
@@ -72,9 +96,25 @@ function search() {
   const query = input.value.trim().toLowerCase();
   if(query==="") return;
 
+  // Buraya yönlendirmeleri ekledim
   if(query==="youtube") {
     window.location.href="https://www.youtube.com/";
+  } else if(query==="orkun ışıtmak") {
+    window.location.href="https://www.youtube.com/results?search_query=orkun+ışıtmak";
+  } else if(query==="mrbeast") {
+    window.location.href="https://www.youtube.com/results?search_query=mrbeast";
+  } else if(query==="kayzer") {
+    window.location.href="https://www.youtube.com/results?search_query=kayzer";
+  } else if(query==="eagle5") {
+    window.location.href="https://www.youtube.com/results?search_query=eagle5";
+  } else if(query==="sahipsizler") {
+    window.location.href="https://www.youtube.com/results?search_query=sahipsizler";
+  } else if(query==="arka sokaklar") {
+    window.location.href="https://www.youtube.com/results?search_query=arka+sokaklar";
+  } else if(query==="kızılcık şerbeti") {
+    window.location.href="https://www.youtube.com/results?search_query=kızılcık+şerbeti";
   } else {
+    // Diğer tüm aramalar Google’a gider
     window.location.href="https://www.google.com/search?q=" + encodeURIComponent(query);
   }
 }
