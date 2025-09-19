@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Biverimo</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        input { padding: 10px; width: 300px; }
+        button { padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>Biverimo Arama Motoru</h1>
+
+    <!-- Arama kutusu -->
+    <input type="text" id="videoSearch" placeholder="YouTube kanalı veya video ara">
+    <button onclick="searchVideo()">Ara</button>
+
+    <script>
+        function searchVideo() {
+            const query = document.getElementById("videoSearch").value.trim();
+            if(query === "") {
+                alert("Lütfen bir isim girin!");
+                return;
+            }
+
+            // Ön tanımlı kanallar ve içerikler
+            const channels = [
+                "Orkun Işıtmak",
+                "MrBeast",
+                "Kayzer",
+                "Eagle5",
+                "Sahipsizler",
+                "Kızılcık Şerbeti",
+                "Arka Sokaklar"
+            ];
+
+            let searchQuery = query;
+
+            // Eğer yazılan kanal veya içerik listede varsa direkt aç
+            if(channels.includes(query)) {
+                searchQuery = query;
+            }
+
+            // YouTube arama linki
+            const youtubeUrl = "https://www.youtube.com/results?search_query=" + encodeURIComponent(searchQuery);
+
+            // Yeni sekmede aç
+            window.open(youtubeUrl, "_blank");
+        }
+    </script>
+</body>
+</html>
