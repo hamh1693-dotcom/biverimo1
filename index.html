@@ -3,70 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biverimo Arama</title>
+<title>Biverimo</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body {
     margin:0;
     padding:0;
-    min-height:100vh;
-    font-family:'Roboto', sans-serif;
-    background: linear-gradient(to bottom, #e0f7fa, #80deea);
+    height:100vh;
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
-    flex-direction:column;
-    color:#333;
+    background:#f8f9fa;
+    font-family:'Roboto', sans-serif;
   }
   h1 {
-    font-size:3em;
+    font-size:4em;
+    font-weight:700;
     margin-bottom:40px;
-    color:#00796b;
+    color:#4285f4; /* Google mavisi ama sen istersen değiştirebilirsin */
   }
   .search-container {
     display:flex;
-    justify-content:center;
-    box-shadow:0 0 10px rgba(0,0,0,0.2);
-    border-radius:30px;
-    overflow:hidden;
-    background-color:#fff;
+    align-items:center;
+    border:1px solid #ddd;
+    border-radius:25px;
+    padding:5px 10px;
+    background:white;
+    width:400px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
   }
   input[type="text"] {
-    width:300px;
-    padding:12px 20px;
+    flex:1;
+    padding:10px;
     border:none;
     outline:none;
-    font-size:1em;
-    text-align:left;
-    color:#333;
-  }
-  input[type="text"]::placeholder {
-    color:#aaa;
+    font-size:16px;
   }
   button {
-    padding:12px 25px;
+    padding:10px 20px;
     border:none;
-    background-color:#00796b;
-    color:#fff;
+    background:#4285f4;
+    color:white;
+    border-radius:20px;
     font-weight:bold;
     cursor:pointer;
-    transition:0.3s;
   }
   button:hover {
-    background-color:#004d40;
+    background:#3367d6;
   }
 </style>
 </head>
 <body>
-<h1>Biverimo</h1>
-<div class="search-container">
-  <input id="searchInput" type="text" placeholder="Aramak istediğiniz siteyi yazın">
-  <button onclick="search()">Ara</button>
-</div>
+  <h1>Biverimo</h1>
+  <div class="search-container">
+    <input id="searchInput" type="text" placeholder="Ara...">
+    <button onclick="search()">Ara</button>
+  </div>
 
 <script>
 const input = document.getElementById("searchInput");
-const siteName = "Biverimo";
 
 input.addEventListener("keypress", function(e){
   if(e.key === "Enter"){ search(); }
@@ -79,8 +75,7 @@ function search() {
   if(query==="youtube") {
     window.location.href="https://www.youtube.com/";
   } else {
-    const googleUrl = "https://www.google.com/search?q=" + encodeURIComponent(siteName + " " + query);
-    window.location.href = googleUrl;
+    window.location.href="https://www.google.com/search?q=" + encodeURIComponent(query);
   }
 }
 </script>
