@@ -7,55 +7,61 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f9f9f9;
+      background: #f3f4f6;
       margin: 0;
       padding: 0;
       text-align: center;
     }
     h1 {
-      font-size: 48px;
-      margin-top: 60px;
-      color: #333;
+      font-size: 52px;
+      margin-top: 80px;
+      color: #222;
     }
     .search-box {
       margin: 30px auto;
     }
     input[type="text"] {
       width: 400px;
-      padding: 12px;
+      padding: 14px;
       font-size: 18px;
       border: 1px solid #ccc;
-      border-radius: 4px;
+      border-radius: 6px;
     }
     button {
-      padding: 12px 20px;
+      padding: 14px 22px;
       font-size: 18px;
       border: none;
       background: #4285f4;
       color: #fff;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
+      margin-left: 8px;
     }
     button:hover {
       background: #3367d6;
     }
     .news {
-      margin-top: 40px;
-      max-width: 800px;
+      margin-top: 50px;
+      max-width: 900px;
       margin-left: auto;
       margin-right: auto;
       text-align: left;
+    }
+    .news h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
     }
     .news-item {
       display: flex;
       align-items: center;
       margin-bottom: 20px;
-      padding-bottom: 10px;
+      padding-bottom: 12px;
       border-bottom: 1px solid #ddd;
     }
     .news-item img {
-      width: 120px;
-      height: 80px;
+      width: 140px;
+      height: 90px;
       object-fit: cover;
       margin-right: 15px;
       border-radius: 6px;
@@ -73,7 +79,7 @@
 <body>
   <h1>Bivermio</h1>
   <div class="search-box">
-    <input type="text" id="search" placeholder="Aramak istediğiniz şeyi yazın...">
+    <input type="text" id="search" placeholder="Aramak istediğin şeyi yaz...">
     <button onclick="searchSite()">Ara</button>
   </div>
 
@@ -85,8 +91,9 @@
   <script>
     // Arama yönlendirme
     function searchSite() {
-      const query = document.getElementById("search").value.toLowerCase();
+      const query = document.getElementById("search").value.toLowerCase().trim();
 
+      // Ana sayfalar için yönlendirme listesi
       const sites = {
         "youtube": "https://www.youtube.com",
         "instagram": "https://www.instagram.com",
@@ -95,11 +102,16 @@
         "tiktok": "https://www.tiktok.com",
         "orkun ışıtmak": "https://www.youtube.com/@OrkunIsitmak",
         "delimine": "https://www.youtube.com/@delimine",
+        "mrbeast": "https://www.youtube.com/@MrBeast",
+        "arka sokaklar": "https://www.youtube.com/results?search_query=arka+sokaklar",
+        "kızılcık şerbeti": "https://www.youtube.com/results?search_query=kızılcık+şerbeti",
+        "sahipsizler": "https://www.youtube.com/results?search_query=sahipsizler"
       };
 
       if (sites[query]) {
         window.location.href = sites[query];
       } else {
+        // Bulunamazsa Google arama
         window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
       }
     }
@@ -119,7 +131,7 @@
         const newsContainer = document.getElementById("news");
         newsContainer.innerHTML = "<h2>Günün Haberleri</h2>";
 
-        data.items.slice(0, 5).forEach(item => {
+        data.items.slice(0, 6).forEach(item => {
           const div = document.createElement("div");
           div.className = "news-item";
           div.innerHTML = `
