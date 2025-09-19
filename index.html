@@ -7,112 +7,151 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f3f4f6;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       margin: 0;
       padding: 0;
       text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
     }
     h1 {
-      font-size: 52px;
-      margin-top: 80px;
-      color: #222;
+      font-size: 64px;
+      margin-top: 60px;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+      animation: fadeIn 2s ease-in-out;
     }
     .search-box {
-      margin: 30px auto;
+      margin: 20px auto;
       position: relative;
       width: 420px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     input[type="text"] {
       width: 400px;
       padding: 14px;
       font-size: 18px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+      transform: scale(1.02);
     }
     button {
       padding: 14px 22px;
       font-size: 18px;
       border: none;
-      background: #4285f4;
+      background: #ff7e5f;
       color: #fff;
-      border-radius: 6px;
+      border-radius: 25px;
       cursor: pointer;
       margin-left: 8px;
+      transition: background 0.3s ease, transform 0.2s ease;
     }
     button:hover {
-      background: #3367d6;
+      background: #eb5757;
+      transform: translateY(-2px);
     }
     .suggestions {
       position: absolute;
-      top: 52px;
+      top: 55px;
       left: 0;
       width: 400px;
       background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 0 0 6px 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       z-index: 10;
       text-align: left;
       display: none;
+      animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown {
+      from {opacity: 0; transform: translateY(-10px);}
+      to {opacity: 1; transform: translateY(0);}
     }
     .suggestions div {
-      padding: 10px;
+      padding: 12px;
       cursor: pointer;
+      transition: background 0.2s;
     }
     .suggestions div:hover {
-      background: #f1f1f1;
+      background: #f0f0f0;
     }
     .news {
       margin-top: 50px;
-      max-width: 900px;
+      max-width: 1000px;
       margin-left: auto;
       margin-right: auto;
       text-align: left;
+      padding: 20px;
     }
     .news h2 {
       text-align: center;
       margin-bottom: 20px;
-      color: #333;
+      color: #fff;
+      font-size: 28px;
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
     .news-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #ddd;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+    .news-item:hover {
+      transform: translateY(-5px);
     }
     .news-item img {
-      width: 140px;
-      height: 90px;
+      width: 100%;
+      height: 160px;
       object-fit: cover;
-      margin-right: 15px;
-      border-radius: 6px;
     }
     .news-item a {
-      font-size: 18px;
-      color: #000;
+      display: block;
+      padding: 12px;
+      font-size: 16px;
+      color: #333;
       text-decoration: none;
     }
     .news-item a:hover {
-      text-decoration: underline;
+      color: #764ba2;
     }
   </style>
 </head>
 <body>
   <h1>Bivermio</h1>
   <div class="search-box">
-    <input type="text" id="search" placeholder="Aramak istediğin şeyi yaz...">
+    <input type="text" id="search" placeholder="Ara...">
     <button onclick="searchSite()">Ara</button>
     <div class="suggestions" id="suggestions"></div>
   </div>
 
   <div class="news" id="news">
     <h2>Günün Haberleri</h2>
-    <p>Yükleniyor...</p>
+    <p style="color:white; text-align:center;">Yükleniyor...</p>
   </div>
 
   <script>
-    // Önerilecek kelimeler
     const suggestionsList = [
       "instagram", "instagram giriş",
       "youtube", "youtube müzik",
@@ -151,7 +190,6 @@
       }
     });
 
-    // Arama yönlendirme
     function searchSite() {
       const query = input.value.toLowerCase().trim();
 
@@ -176,20 +214,19 @@
       }
     }
 
-    // Enter ile çalıştır
     input.addEventListener("keydown", function(e) {
       if (e.key === "Enter") {
         searchSite();
       }
     });
 
-    // Haberleri çek
     async function loadNews() {
       try {
         const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://www.cnnturk.com/feed/rss/all/news");
         const data = await res.json();
         const newsContainer = document.getElementById("news");
-        newsContainer.innerHTML = "<h2>Günün Haberleri</h2>";
+        newsContainer.innerHTML = "<h2>Günün Haberleri</h2><div class='news-grid'></div>";
+        const grid = newsContainer.querySelector(".news-grid");
 
         data.items.slice(0, 6).forEach(item => {
           const div = document.createElement("div");
@@ -198,10 +235,10 @@
             <img src="${item.enclosure.link}" alt="haber">
             <a href="${item.link}" target="_blank">${item.title}</a>
           `;
-          newsContainer.appendChild(div);
+          grid.appendChild(div);
         });
       } catch (err) {
-        document.getElementById("news").innerHTML = "<p>Haberler yüklenemedi.</p>";
+        document.getElementById("news").innerHTML = "<p style='color:white'>Haberler yüklenemedi.</p>";
       }
     }
     loadNews();
