@@ -1,148 +1,138 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biverimo</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  body {
-    margin:0;
-    padding:0;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-    align-items:center;
-    background:#f8f9fa;
-    font-family:'Roboto', sans-serif;
-  }
-  h1 {
-    font-size:4em;
-    font-weight:700;
-    margin:60px 0 40px 0;
-    color:#4285f4;
-  }
-  .search-container {
-    display:flex;
-    align-items:center;
-    border:1px solid #ddd;
-    border-radius:25px;
-    padding:5px 10px;
-    background:white;
-    width:400px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
-  }
-  input[type="text"] {
-    flex:1;
-    padding:10px;
-    border:none;
-    outline:none;
-    font-size:16px;
-  }
-  button {
-    padding:10px 20px;
-    border:none;
-    background:#4285f4;
-    color:white;
-    border-radius:20px;
-    font-weight:bold;
-    cursor:pointer;
-  }
-  button:hover {
-    background:#3367d6;
-  }
-  .news-section {
-    margin-top:60px;
-    width:80%;
-    max-width:800px;
-  }
-  .news-section h2 {
-    font-size:1.5em;
-    margin-bottom:15px;
-  }
-  .news-item {
-    display:flex;
-    align-items:center;
-    background:white;
-    padding:15px;
-    border-radius:10px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom:10px;
-  }
-  .news-item img {
-    width:80px;
-    height:60px;
-    object-fit:cover;
-    border-radius:8px;
-    margin-right:15px;
-  }
-  .news-item span {
-    font-size:1em;
-    font-weight:500;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bivermio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    h1 {
+      font-size: 48px;
+      margin-top: 60px;
+      color: #333;
+    }
+    .search-box {
+      margin: 30px auto;
+    }
+    input[type="text"] {
+      width: 400px;
+      padding: 12px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 18px;
+      border: none;
+      background: #4285f4;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3367d6;
+    }
+    .news {
+      margin-top: 40px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .news-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .news-item img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      margin-right: 15px;
+      border-radius: 6px;
+    }
+    .news-item a {
+      font-size: 18px;
+      color: #000;
+      text-decoration: none;
+    }
+    .news-item a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h1>Biverimo</h1>
-  <div class="search-container">
-    <input id="searchInput" type="text" placeholder="Ara...">
-    <button onclick="search()">Ara</button>
+  <h1>Bivermio</h1>
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Aramak istediğiniz şeyi yazın...">
+    <button onclick="searchSite()">Ara</button>
   </div>
 
-  <div class="news-section">
-    <h2>📢 Haberler</h2>
-    <div class="news-item">
-      <img src="https://i.ytimg.com/vi/4aZ3uaCkZZY/hqdefault.jpg" alt="Orkun">
-      <span>🎥 Orkun Işıtmak’tan yeni video geldi!</span>
-    </div>
-    <div class="news-item">
-      <img src="https://i.ytimg.com/vi/U3Rj37Jq3t8/hqdefault.jpg" alt="MrBeast">
-      <span>🔥 MrBeast dev bir sürpriz yayınladı!</span>
-    </div>
-    <div class="news-item">
-      <img src="https://i.ytimg.com/vi/nY3jY5n3i3I/hqdefault.jpg" alt="Kızılcık Şerbeti">
-      <span>🎶 Kızılcık Şerbeti yeni fragmanı çıktı.</span>
-    </div>
-    <div class="news-item">
-      <img src="https://i.ytimg.com/vi/8NnP2qB1MPs/hqdefault.jpg" alt="Arka Sokaklar">
-      <span>📺 Arka Sokaklar yeni sezon başlıyor.</span>
-    </div>
+  <div class="news" id="news">
+    <h2>Günün Haberleri</h2>
+    <p>Yükleniyor...</p>
   </div>
 
-<script>
-const input = document.getElementById("searchInput");
+  <script>
+    // Arama yönlendirme
+    function searchSite() {
+      const query = document.getElementById("search").value.toLowerCase();
 
-input.addEventListener("keypress", function(e){
-  if(e.key === "Enter"){ search(); }
-});
+      const sites = {
+        "youtube": "https://www.youtube.com",
+        "instagram": "https://www.instagram.com",
+        "facebook": "https://www.facebook.com",
+        "twitter": "https://twitter.com",
+        "tiktok": "https://www.tiktok.com",
+        "orkun ışıtmak": "https://www.youtube.com/@OrkunIsitmak",
+        "delimine": "https://www.youtube.com/@delimine",
+      };
 
-function search() {
-  const query = input.value.trim().toLowerCase();
-  if(query==="") return;
+      if (sites[query]) {
+        window.location.href = sites[query];
+      } else {
+        window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+      }
+    }
 
-  // Yönlendirmeler
-  if(query==="youtube") {
-    window.location.href="https://www.youtube.com/";
-  } else if(query==="orkun ışıtmak") {
-    window.location.href="https://www.youtube.com/results?search_query=orkun+ışıtmak";
-  } else if(query==="mrbeast") {
-    window.location.href="https://www.youtube.com/results?search_query=mrbeast";
-  } else if(query==="kayzer") {
-    window.location.href="https://www.youtube.com/results?search_query=kayzer";
-  } else if(query==="eagle5") {
-    window.location.href="https://www.youtube.com/results?search_query=eagle5";
-  } else if(query==="sahipsizler") {
-    window.location.href="https://www.youtube.com/results?search_query=sahipsizler";
-  } else if(query==="arka sokaklar") {
-    window.location.href="https://www.youtube.com/results?search_query=arka+sokaklar";
-  } else if(query==="kızılcık şerbeti") {
-    window.location.href="https://www.youtube.com/results?search_query=kızılcık+şerbeti";
-  } else {
-    // Diğerleri de direkt YouTube'da aransın
-    window.location.href="https://www.youtube.com/results?search_query=" + encodeURIComponent(query);
-  }
-}
-</script>
+    // Enter tuşu ile arama
+    document.getElementById("search").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        searchSite();
+      }
+    });
+
+    // Haberleri RSS'den çek
+    async function loadNews() {
+      try {
+        const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://www.cnnturk.com/feed/rss/all/news");
+        const data = await res.json();
+        const newsContainer = document.getElementById("news");
+        newsContainer.innerHTML = "<h2>Günün Haberleri</h2>";
+
+        data.items.slice(0, 5).forEach(item => {
+          const div = document.createElement("div");
+          div.className = "news-item";
+          div.innerHTML = `
+            <img src="${item.enclosure.link}" alt="haber">
+            <a href="${item.link}" target="_blank">${item.title}</a>
+          `;
+          newsContainer.appendChild(div);
+        });
+      } catch (err) {
+        document.getElementById("news").innerHTML = "<p>Haberler yüklenemedi.</p>";
+      }
+    }
+    loadNews();
+  </script>
 </body>
 </html>
