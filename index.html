@@ -1,150 +1,147 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bivermio</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  body { background-color: #f3f4f6; }
-  #results { max-height: 400px; overflow-y: auto; }
-  .result-item { display: flex; align-items: center; padding: 0.5rem 1rem; cursor: pointer; transition: all 0.2s; }
-  .result-item:hover, .result-item.active { transform: translateX(5px); background-color: #e0f2fe; }
-  .result-icon { width: 24px; height: 24px; margin-right: 10px; }
-  .quick-btn { transition: transform 0.2s; }
-  .quick-btn:hover { transform: scale(1.05); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bivermio - Gelişmiş Arama Motoru</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background: #4a90e2;
+      color: white;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .search-container {
+      margin: 50px 0;
+      display: flex;
+      gap: 10px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 400px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #357ABD;
+    }
+    .results {
+      margin-top: 20px;
+      width: 80%;
+    }
+    .result-item {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+    }
+    .result-item a {
+      text-decoration: none;
+      color: #4a90e2;
+      font-weight: bold;
+    }
+  </style>
 </head>
-<body class="flex flex-col items-center p-6 min-h-screen">
+<body>
 
-<h1 class="text-4xl font-bold mb-6 text-blue-600">Bivermio</h1>
-<p class="text-gray-600 mb-4">Yanlış yazsan bile bulur, hızlı aç!</p>
+<header>Bivermio</header>
 
-<!-- Arama -->
-<div class="w-full max-w-xl mb-4">
-  <input type="text" id="search" placeholder="Site veya uygulama ara..." 
-    class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="Aramak istediğiniz şeyi yazın...">
+  <button onclick="performSearch()">Ara</button>
 </div>
 
-<!-- Kategori filtreleri -->
-<div class="w-full max-w-xl flex gap-2 mb-4 flex-wrap">
-  <button class="filter-btn bg-blue-500 text-white px-3 py-1 rounded-lg" data-category="Yapay Zekâ">Yapay Zekâ</button>
-  <button class="filter-btn bg-green-500 text-white px-3 py-1 rounded-lg" data-category="Sosyal Medya">Sosyal Medya</button>
-  <button class="filter-btn bg-purple-500 text-white px-3 py-1 rounded-lg" data-category="Video">Video</button>
-  <button class="filter-btn bg-yellow-500 text-white px-3 py-1 rounded-lg" data-category="İletişim">İletişim</button>
-  <button class="filter-btn bg-gray-500 text-white px-3 py-1 rounded-lg" data-category="Tüm">Tüm</button>
-</div>
-
-<!-- Arama Sonuçları -->
-<ul id="results" class="w-full max-w-xl bg-white rounded-lg shadow-md mb-6"></ul>
-
-<!-- Hızlı Aç / Popüler -->
-<div class="w-full max-w-xl">
-  <h2 class="text-2xl font-bold mb-2">Hızlı Aç</h2>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-    <button class="quick-btn p-3 bg-blue-100 rounded-lg" onclick="window.open('https://chat.openai.com/', '_blank')">ChatGPT</button>
-    <button class="quick-btn p-3 bg-red-100 rounded-lg" onclick="window.open('https://www.youtube.com/', '_blank')">YouTube</button>
-    <button class="quick-btn p-3 bg-pink-100 rounded-lg" onclick="window.open('https://www.instagram.com/', '_blank')">Instagram</button>
-    <button class="quick-btn p-3 bg-green-100 rounded-lg" onclick="window.open('https://www.tiktok.com/', '_blank')">TikTok</button>
-    <button class="quick-btn p-3 bg-purple-100 rounded-lg" onclick="window.open('https://www.linkedin.com/', '_blank')">LinkedIn</button>
-    <button class="quick-btn p-3 bg-yellow-100 rounded-lg" onclick="window.open('https://www.twitter.com/', '_blank')">Twitter</button>
-    <button class="quick-btn p-3 bg-gray-100 rounded-lg" onclick="window.open('https://openai.com/dall-e', '_blank')">DALL·E</button>
-    <button class="quick-btn p-3 bg-indigo-100 rounded-lg" onclick="window.open('https://www.midjourney.com/', '_blank')">MidJourney</button>
-  </div>
-</div>
+<div class="results" id="results"></div>
 
 <script>
-const searchInput = document.getElementById('search');
-const resultsList = document.getElementById('results');
-let currentCategory = "Tüm";
-let activeIndex = -1;
-let currentResults = [];
+  // YouTube API Key'inizi buraya ekleyin
+  const YOUTUBE_API_KEY = 'BURAYA_YOUTUBE_API_KEY';
 
-const filterButtons = document.querySelectorAll('.filter-btn');
-filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        currentCategory = btn.dataset.category;
-        searchInput.dispatchEvent(new Event('input'));
+  async function performSearch() {
+    const query = document.getElementById('searchInput').value;
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+
+    if(query.trim() === '') {
+      resultsDiv.innerHTML = '<p>Lütfen bir şeyler yazın.</p>';
+      return;
+    }
+
+    // YouTube API araması
+    try {
+      const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=5&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}`);
+      const data = await response.json();
+
+      if(data.items && data.items.length > 0) {
+        data.items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'result-item';
+          div.innerHTML = `
+            <a href="https://www.youtube.com/watch?v=${item.id.videoId}" target="_blank">${item.snippet.title}</a>
+            <p>${item.snippet.description}</p>
+          `;
+          resultsDiv.appendChild(div);
+        });
+      } else {
+        resultsDiv.innerHTML = '<p>YouTube’da sonuç bulunamadı.</p>';
+      }
+    } catch (err) {
+      resultsDiv.innerHTML = '<p>Arama sırasında bir hata oluştu.</p>';
+      console.error(err);
+    }
+
+    // Sosyal medya örnek sonuçları (demo)
+    const socialResults = [
+      `Twitter trendi: "${query}" ile ilgili`,
+      `Instagram paylaşımı: "${query}" ile ilgili`
+    ];
+
+    socialResults.forEach(res => {
+      const div = document.createElement('div');
+      div.className = 'result-item';
+      div.textContent = res;
+      resultsDiv.appendChild(div);
     });
-});
 
-let timeout = null;
+    // Yapay zeka öneri simülasyonu
+    const aiSuggestions = [
+      `Önerilen aramalar: "${query} haberleri"`,
+      `"${query} videoları"`,
+      `"${query} sosyal medya trendleri"`
+    ];
 
-searchInput.addEventListener('input', () => {
-    clearTimeout(timeout);
-    timeout = setTimeout(async () => {
-        const query = searchInput.value.trim();
-        if (!query && currentCategory === "Tüm") {
-            resultsList.innerHTML = '';
-            currentResults = [];
-            activeIndex = -1;
-            return;
-        }
+    aiSuggestions.forEach(res => {
+      const div = document.createElement('div');
+      div.className = 'result-item';
+      div.style.background = '#eaf2ff';
+      div.textContent = res;
+      resultsDiv.appendChild(div);
+    });
+  }
+</script>
 
-        try {
-            let url = `http://localhost:3000/search?q=${query}`;
-            if (currentCategory !== "Tüm") url += `&category=${currentCategory}`;
-            const res = await fetch(url);
-            let data = await res.json();
-
-            // İlk harf eşleşmelerini önceliklendir
-            if (query.length > 0) {
-                const lowerQuery = query.toLowerCase();
-                data.sort((a, b) => {
-                    const aMatch = a.name.toLowerCase().startsWith(lowerQuery);
-                    const bMatch = b.name.toLowerCase().startsWith(lowerQuery);
-                    return (bMatch - aMatch);
-                });
-            }
-
-            currentResults = data;
-            activeIndex = -1;
-
-            resultsList.innerHTML = data.map((item, i) => `
-                <li class="result-item" data-index="${i}">
-                  <img src="https://www.google.com/s2/favicons?domain=${item.url}" class="result-icon" />
-                  <span class="flex justify-between w-full">
-                    <span class="font-medium">${item.name}</span>
-                    <span class="text-sm text-gray-500">${item.category}</span>
-                  </span>
-                </li>
-            `).join('');
-
-            // Click ile açma
-            document.querySelectorAll('.result-item').forEach(el => {
-                el.addEventListener('click', () => {
-                    const index = parseInt(el.dataset.index);
-                    window.open(currentResults[index].url, '_blank');
-                });
-            });
-
-        } catch (e) {
-            resultsList.innerHTML = '<li class="px-4 py-2 text-red-500">Arama sırasında hata oluştu</li>';
-        }
-    }, 200);
-});
-
-// Klavye ile navigasyon ve enter açma
-searchInput.addEventListener('keydown', (e) => {
-    if (!currentResults.length) return;
-    const items = document.querySelectorAll('.result-item');
-    if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        activeIndex = (activeIndex + 1) % currentResults.length;
-        updateActive(items);
-    }
-    if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        activeIndex = (activeIndex - 1 + currentResults.length) % currentResults.length;
-        updateActive(items);
-    }
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        if (activeIndex >= 0) {
-            window.open(currentResults[activeIndex].url, '_blank');
-        } else if (currentResults.length) {
-            window.open(currentResults[0].url, '_blank');
-        }
-    }
-});
-
+</body>
+</html>
