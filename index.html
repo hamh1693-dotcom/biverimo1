@@ -3,141 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Biverimo</title>
+<title>Bivermio Arama</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    padding-top: 100px;
-  }
-  h1 {
-    font-size: 4rem;
-    color: #333;
-    margin-bottom: 40px;
-  }
-  .search-box {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  input {
-    padding: 12px 20px;
-    width: 400px;
-    border-radius: 24px;
-    border: 1px solid #ddd;
-    font-size: 1.2rem;
-    outline: none;
-    transition: box-shadow 0.3s;
-  }
-  input:focus {
-    box-shadow: 0 0 8px rgba(0,0,0,0.2);
-  }
-  button {
-    padding: 12px 20px;
-    margin-left: 10px;
-    border-radius: 24px;
-    border: none;
-    background-color: #4285F4;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-  }
-  button:hover {
-    background-color: #3367D6;
-    transform: scale(1.05);
-  }
-  .results {
-    width: 500px;
-    margin-top: 10px;
-    position: absolute;
-    top: 50px;
-    z-index: 1000;
-  }
-  .result-item {
-    background: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .result-item:hover {
-    background: #f1f1f1;
-  }
-  .result-item a {
-    text-decoration: none;
-    color: #1a0dab;
-    font-size: 1rem;
-  }
+  #results { max-height: 300px; overflow-y: auto; }
 </style>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
 
-<h1>Biverimo</h1>
+<h1 class="text-3xl font-bold mb-6">Bivermio Arama</h1>
 
-<div class="search-box">
-  <input type="text" id="search" placeholder="Aramak istediğiniz siteyi yazın...">
-  <button onclick="search()">Ara</button>
-  <div class="results" id="results"></div>
+<div class="w-full max-w-xl mb-4">
+  <input type="text" id="search" placeholder="Site veya uygulama ara..." 
+    class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
+</div>
+
+<!-- Kategori filtreleri -->
+<div class="w-full max-w-xl flex gap-2 mb-4 flex-wrap">
+  <button class="filter-btn bg-blue-500 text-white px-3 py-1 rounded-lg" data-category="Yapay Zekâ">Yapay Zekâ</button>
+  <button class="filter-btn bg-green-500 text-white px-3 py-1 rounded-lg" data-category="Sosyal Medya">Sosyal Medya</button>
+  <button class="filter-btn bg-purple-500 text-white px-3 py-1 rounded-lg" data-category="Video">Video</button>
+  <button class="filter-btn bg-yellow-500 text-white px-3 py-1 rounded-lg" data-category="İletişim">İletişim</button>
+  <button class="filter-btn bg-gray-500 text-white px-3 py-1 rounded-lg" data-category="Tüm">Tüm</button>
+</div>
+
+<ul id="results" class="w-full max-w-xl bg-white rounded-lg shadow-md"></ul>
+
+<!-- Popüler siteler -->
+<div class="w-full max-w-xl mt-6">
+  <h2 class="text-xl font-bold mb-2">Popüler Siteler</h2>
+  <ul class="grid grid-cols-2 gap-2">
+    <li><a href="https://chat.openai.com/" target="_blank" class="block p-2 bg-blue-100 rounded-lg">ChatGPT</a></li>
+    <li><a href="https://www.youtube.com/" target="_blank" class="block p-2 bg-red-100 rounded-lg">YouTube</a></li>
+    <li><a href="https://www.instagram.com/" target="_blank" class="block p-2 bg-pink-100 rounded-lg">Instagram</a></li>
+    <li><a href="https://www.tiktok.com/" target="_blank" class="block p-2 bg-green-100 rounded-lg">TikTok</a></li>
+  </ul>
 </div>
 
 <script>
-const sites = [
-  {name: "YouTube", url: "https://www.youtube.com/"},
-  {name: "YouTube Music", url: "https://music.youtube.com/"},
-  {name: "Instagram", url: "https://www.instagram.com/"},
-  {name: "Instagram Explore", url: "https://www.instagram.com/explore/"},
-  {name: "Twitter", url: "https://twitter.com/"},
-  {name: "Facebook", url: "https://www.facebook.com/"},
-  {name: "Gmail", url: "https://mail.google.com/"},
-  {name: "Kayzer", url: "https://www.youtube.com/"},
-  {name: "Orkun Işıtmak", url: "https://www.youtube.com/"},
-  {name: "MrBeast", url: "https://www.youtube.com/"},
-  {name: "Delimine", url: "https://www.youtube.com/"},
-  {name: "Eagle5", url: "https://www.youtube.com/"},
-  {name: "Kızılcık Şerbeti", url: "https://www.youtube.com/"},
-  {name: "Arka Sokaklar", url: "https://www.youtube.com/"},
-  {name: "Sahipsizler", url: "https://www.youtube.com/"}
-];
+const searchInput = document.getElementById('search');
+const resultsList = document.getElementById('results');
+let currentCategory = "Tüm";
 
-function search() {
-  const query = document.getElementById("search").value.trim().toLowerCase();
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
+const filterButtons = document.querySelectorAll('.filter-btn');
+filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        currentCategory = btn.dataset.category;
+        searchInput.dispatchEvent(new Event('input'));
+    });
+});
 
-  if(query === "") return;
+let timeout = null;
 
-  const filtered = sites.filter(site => site.name.toLowerCase().includes(query));
-
-  filtered.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "result-item";
-    div.innerHTML = `<a href="${item.url}" target="_blank">${item.name}</a>`;
-    resultsDiv.appendChild(div);
-  });
-}
-
-// Autocomplete efekt (yazarken sonuçlar)
-document.getElementById("search").addEventListener("input", search);
-
-// Enter tuşu ile ilk sonucu aç
-document.getElementById("search").addEventListener("keypress", function(e) {
-  if(e.key === "Enter") {
-    const resultsDiv = document.getElementById("results");
-    const firstLink = resultsDiv.querySelector("a");
-    if(firstLink) firstLink.click();
-  }
+searchInput.addEventListener('input', () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(async () => {
+        const query = searchInput.value.trim();
+        if (!query && currentCategory === "Tüm") {
+            resultsList.innerHTML = '';
+            return;
+        }
+        try {
+            let url = `http://localhost:3000/search?q=${query}`;
+            if (currentCategory !== "Tüm") url += `&category=${currentCategory}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            resultsList.innerHTML = data.map(item => `
+                <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer">
+                  <a href="${item.url}" target="_blank" class="flex justify-between items-center">
+                    <span class="font-medium">${item.name}</span>
+                    <span class="text-sm text-gray-500">${item.category}</span>
+                  </a>
+                </li>
+            `).join('');
+        } catch (e) {
+            resultsList.innerHTML = '<li class="px-4 py-2 text-red-500">Arama sırasında hata oluştu</li>';
+        }
+    }, 200);
 });
 </script>
 
 </body>
-</html>
+</html
