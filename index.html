@@ -87,7 +87,7 @@
           item.className = 'autocomplete-item';
           item.textContent = site.keywords[0]; // Öneride ana isim göster
           item.onclick = () => {
-            window.open(site.url, '_blank'); // Siteyi yeni sekmede aç
+            window.location.href = site.url; // Aynı sayfada aç
           };
           list.appendChild(item);
           break;
