@@ -6,7 +6,10 @@
 <title>Bivermio Arama</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  #results { max-height: 300px; overflow-y: auto; }
+  #results { max-height: 400px; overflow-y: auto; }
+  .result-item { transition: all 0.2s; display: flex; align-items: center; padding: 0.5rem 1rem; cursor: pointer; }
+  .result-item:hover, .result-item.active { transform: translateX(5px); background-color: #e0f2fe; }
+  .result-icon { width: 24px; height: 24px; margin-right: 10px; }
 </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
@@ -29,21 +32,12 @@
 
 <ul id="results" class="w-full max-w-xl bg-white rounded-lg shadow-md"></ul>
 
-<!-- Popüler siteler -->
-<div class="w-full max-w-xl mt-6">
-  <h2 class="text-xl font-bold mb-2">Popüler Siteler</h2>
-  <ul class="grid grid-cols-2 gap-2">
-    <li><a href="https://chat.openai.com/" target="_blank" class="block p-2 bg-blue-100 rounded-lg">ChatGPT</a></li>
-    <li><a href="https://www.youtube.com/" target="_blank" class="block p-2 bg-red-100 rounded-lg">YouTube</a></li>
-    <li><a href="https://www.instagram.com/" target="_blank" class="block p-2 bg-pink-100 rounded-lg">Instagram</a></li>
-    <li><a href="https://www.tiktok.com/" target="_blank" class="block p-2 bg-green-100 rounded-lg">TikTok</a></li>
-  </ul>
-</div>
-
 <script>
 const searchInput = document.getElementById('search');
 const resultsList = document.getElementById('results');
 let currentCategory = "Tüm";
+let activeIndex = -1;
+let currentResults = [];
 
 const filterButtons = document.querySelectorAll('.filter-btn');
 filterButtons.forEach(btn => {
@@ -61,6 +55,8 @@ searchInput.addEventListener('input', () => {
         const query = searchInput.value.trim();
         if (!query && currentCategory === "Tüm") {
             resultsList.innerHTML = '';
+            currentResults = [];
+            activeIndex = -1;
             return;
         }
         try {
@@ -68,20 +64,62 @@ searchInput.addEventListener('input', () => {
             if (currentCategory !== "Tüm") url += `&category=${currentCategory}`;
             const res = await fetch(url);
             const data = await res.json();
-            resultsList.innerHTML = data.map(item => `
-                <li class="px-4 py-2 hover:bg-blue-100 cursor-pointer">
-                  <a href="${item.url}" target="_blank" class="flex justify-between items-center">
+            currentResults = data;
+            activeIndex = -1;
+
+            resultsList.innerHTML = data.map((item, i) => `
+                <li class="result-item" data-index="${i}">
+                  <img src="https://www.google.com/s2/favicons?domain=${item.url}" class="result-icon" />
+                  <span class="flex justify-between w-full">
                     <span class="font-medium">${item.name}</span>
                     <span class="text-sm text-gray-500">${item.category}</span>
-                  </a>
+                  </span>
                 </li>
             `).join('');
+
+            // Click ile açma
+            document.querySelectorAll('.result-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const index = parseInt(el.dataset.index);
+                    window.open(currentResults[index].url, '_blank');
+                });
+            });
+
         } catch (e) {
             resultsList.innerHTML = '<li class="px-4 py-2 text-red-500">Arama sırasında hata oluştu</li>';
         }
     }, 200);
 });
+
+// Klavye ile navigasyon ve enter açma
+searchInput.addEventListener('keydown', (e) => {
+    if (!currentResults.length) return;
+    const items = document.querySelectorAll('.result-item');
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIndex = (activeIndex + 1) % currentResults.length;
+        updateActive(items);
+    }
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = (activeIndex - 1 + currentResults.length) % currentResults.length;
+        updateActive(items);
+    }
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIndex >= 0) {
+            window.open(currentResults[activeIndex].url, '_blank');
+        } else if (currentResults.length) {
+            window.open(currentResults[0].url, '_blank');
+        }
+    }
+});
+
+function updateActive(items) {
+    items.forEach(el => el.classList.remove('active'));
+    if (activeIndex >= 0) items[activeIndex].classList.add('active');
+}
 </script>
 
 </body>
-</html
+</html>
