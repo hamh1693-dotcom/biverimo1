@@ -3,19 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bivermio Arama</title>
+<title>Bivermio</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+  body { background-color: #f3f4f6; }
   #results { max-height: 400px; overflow-y: auto; }
-  .result-item { transition: all 0.2s; display: flex; align-items: center; padding: 0.5rem 1rem; cursor: pointer; }
+  .result-item { display: flex; align-items: center; padding: 0.5rem 1rem; cursor: pointer; transition: all 0.2s; }
   .result-item:hover, .result-item.active { transform: translateX(5px); background-color: #e0f2fe; }
   .result-icon { width: 24px; height: 24px; margin-right: 10px; }
+  .quick-btn { transition: transform 0.2s; }
+  .quick-btn:hover { transform: scale(1.05); }
 </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center p-6">
+<body class="flex flex-col items-center p-6 min-h-screen">
 
-<h1 class="text-3xl font-bold mb-6">Bivermio Arama</h1>
+<h1 class="text-4xl font-bold mb-6 text-blue-600">Bivermio</h1>
+<p class="text-gray-600 mb-4">Yanlış yazsan bile bulur, hızlı aç!</p>
 
+<!-- Arama -->
 <div class="w-full max-w-xl mb-4">
   <input type="text" id="search" placeholder="Site veya uygulama ara..." 
     class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -30,7 +35,23 @@
   <button class="filter-btn bg-gray-500 text-white px-3 py-1 rounded-lg" data-category="Tüm">Tüm</button>
 </div>
 
-<ul id="results" class="w-full max-w-xl bg-white rounded-lg shadow-md"></ul>
+<!-- Arama Sonuçları -->
+<ul id="results" class="w-full max-w-xl bg-white rounded-lg shadow-md mb-6"></ul>
+
+<!-- Hızlı Aç / Popüler -->
+<div class="w-full max-w-xl">
+  <h2 class="text-2xl font-bold mb-2">Hızlı Aç</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+    <button class="quick-btn p-3 bg-blue-100 rounded-lg" onclick="window.open('https://chat.openai.com/', '_blank')">ChatGPT</button>
+    <button class="quick-btn p-3 bg-red-100 rounded-lg" onclick="window.open('https://www.youtube.com/', '_blank')">YouTube</button>
+    <button class="quick-btn p-3 bg-pink-100 rounded-lg" onclick="window.open('https://www.instagram.com/', '_blank')">Instagram</button>
+    <button class="quick-btn p-3 bg-green-100 rounded-lg" onclick="window.open('https://www.tiktok.com/', '_blank')">TikTok</button>
+    <button class="quick-btn p-3 bg-purple-100 rounded-lg" onclick="window.open('https://www.linkedin.com/', '_blank')">LinkedIn</button>
+    <button class="quick-btn p-3 bg-yellow-100 rounded-lg" onclick="window.open('https://www.twitter.com/', '_blank')">Twitter</button>
+    <button class="quick-btn p-3 bg-gray-100 rounded-lg" onclick="window.open('https://openai.com/dall-e', '_blank')">DALL·E</button>
+    <button class="quick-btn p-3 bg-indigo-100 rounded-lg" onclick="window.open('https://www.midjourney.com/', '_blank')">MidJourney</button>
+  </div>
+</div>
 
 <script>
 const searchInput = document.getElementById('search');
@@ -59,11 +80,23 @@ searchInput.addEventListener('input', () => {
             activeIndex = -1;
             return;
         }
+
         try {
             let url = `http://localhost:3000/search?q=${query}`;
             if (currentCategory !== "Tüm") url += `&category=${currentCategory}`;
             const res = await fetch(url);
-            const data = await res.json();
+            let data = await res.json();
+
+            // İlk harf eşleşmelerini önceliklendir
+            if (query.length > 0) {
+                const lowerQuery = query.toLowerCase();
+                data.sort((a, b) => {
+                    const aMatch = a.name.toLowerCase().startsWith(lowerQuery);
+                    const bMatch = b.name.toLowerCase().startsWith(lowerQuery);
+                    return (bMatch - aMatch);
+                });
+            }
+
             currentResults = data;
             activeIndex = -1;
 
@@ -115,11 +148,3 @@ searchInput.addEventListener('keydown', (e) => {
     }
 });
 
-function updateActive(items) {
-    items.forEach(el => el.classList.remove('active'));
-    if (activeIndex >= 0) items[activeIndex].classList.add('active');
-}
-</script>
-
-</body>
-</html>
