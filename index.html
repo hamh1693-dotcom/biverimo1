@@ -100,8 +100,14 @@ const predefinedResults = {
   twitter: [
     {name: "Twitter", url: "https://twitter.com/"},
   ],
+  facebook: [
+    {name: "Facebook", url: "https://www.facebook.com/"},
+  ],
+  gmail: [
+    {name: "Gmail", url: "https://mail.google.com/"},
+  ],
   default: [
-    {name: "Biverimo", url: "https://biverimo.github.io/"},
+    {name: "Biverimo Ana Sayfa", url: "https://biverimo.github.io/"},
   ]
 };
 
@@ -110,6 +116,9 @@ function search() {
   const resultsDiv = document.getElementById("results");
   resultsDiv.innerHTML = "";
 
+  if(query === "") return;
+
+  // Önceden tanımlı sonuçlar yoksa default göster
   let results = predefinedResults[query] || predefinedResults.default;
 
   results.forEach(item => {
