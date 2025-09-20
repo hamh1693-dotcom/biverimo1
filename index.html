@@ -12,21 +12,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    overflow: hidden;
-    transition: background 1s ease;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding-top: 100px;
   }
   h1 {
     font-size: 4rem;
     color: #333;
     margin-bottom: 40px;
-    transition: transform 0.5s;
   }
   .search-box {
     display: flex;
     align-items: center;
-    transition: transform 0.5s;
+    margin-bottom: 20px;
   }
   input {
     padding: 12px 20px;
@@ -55,6 +53,27 @@
     background-color: #3367D6;
     transform: scale(1.05);
   }
+  .results {
+    width: 500px;
+    margin-top: 20px;
+  }
+  .result-item {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .result-item:hover {
+    background: #f1f1f1;
+  }
+  .result-item a {
+    text-decoration: none;
+    color: #1a0dab;
+    font-size: 1rem;
+  }
 </style>
 </head>
 <body>
@@ -62,29 +81,51 @@
 <h1>Biverimo</h1>
 
 <div class="search-box">
-  <input type="text" id="search" placeholder="Aramak istediğiniz siteyi veya kelimeyi yazın...">
-  <button onclick="goToSite()">Ara</button>
+  <input type="text" id="search" placeholder="Aramak istediğiniz siteyi yazın...">
+  <button onclick="search()">Ara</button>
 </div>
 
+<div class="results" id="results"></div>
+
 <script>
-  function goToSite() {
-    let query = document.getElementById("search").value.trim();
-    if(query === "") return;
-    
-    // Kullanıcının yazdığı URL veya kelimeye yönlendir
-    if(!query.startsWith("http://") && !query.startsWith("https://")) {
-      query = "https://" + query;
-    }
+const predefinedResults = {
+  youtube: [
+    {name: "YouTube", url: "https://www.youtube.com/"},
+    {name: "YouTube Music", url: "https://music.youtube.com/"}
+  ],
+  instagram: [
+    {name: "Instagram", url: "https://www.instagram.com/"},
+    {name: "Instagram Explore", url: "https://www.instagram.com/explore/"}
+  ],
+  twitter: [
+    {name: "Twitter", url: "https://twitter.com/"},
+  ],
+  default: [
+    {name: "Biverimo", url: "https://biverimo.github.io/"},
+  ]
+};
 
-    window.location.href = query;
-  }
+function search() {
+  const query = document.getElementById("search").value.trim().toLowerCase();
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
 
-  // Enter tuşu ile de çalışsın
-  document.getElementById("search").addEventListener("keypress", function(e) {
-    if(e.key === "Enter") {
-      goToSite();
-    }
+  let results = predefinedResults[query] || predefinedResults.default;
+
+  results.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "result-item";
+    div.innerHTML = `<a href="${item.url}" target="_blank">${item.name}</a>`;
+    resultsDiv.appendChild(div);
   });
+}
+
+// Enter tuşu ile çalışması
+document.getElementById("search").addEventListener("keypress", function(e) {
+  if(e.key === "Enter") {
+    search();
+  }
+});
 </script>
 
 </body>
