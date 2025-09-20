@@ -22,6 +22,7 @@
     margin-bottom: 40px;
   }
   .search-box {
+    position: relative;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
@@ -55,13 +56,16 @@
   }
   .results {
     width: 500px;
-    margin-top: 20px;
+    margin-top: 10px;
+    position: absolute;
+    top: 50px;
+    z-index: 1000;
   }
   .result-item {
     background: white;
-    padding: 12px 20px;
+    padding: 10px 15px;
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     cursor: pointer;
     transition: background 0.2s;
@@ -83,33 +87,27 @@
 <div class="search-box">
   <input type="text" id="search" placeholder="Aramak istediğiniz siteyi yazın...">
   <button onclick="search()">Ara</button>
+  <div class="results" id="results"></div>
 </div>
 
-<div class="results" id="results"></div>
-
 <script>
-const predefinedResults = {
-  youtube: [
-    {name: "YouTube", url: "https://www.youtube.com/"},
-    {name: "YouTube Music", url: "https://music.youtube.com/"}
-  ],
-  instagram: [
-    {name: "Instagram", url: "https://www.instagram.com/"},
-    {name: "Instagram Explore", url: "https://www.instagram.com/explore/"}
-  ],
-  twitter: [
-    {name: "Twitter", url: "https://twitter.com/"},
-  ],
-  facebook: [
-    {name: "Facebook", url: "https://www.facebook.com/"},
-  ],
-  gmail: [
-    {name: "Gmail", url: "https://mail.google.com/"},
-  ],
-  default: [
-    {name: "Biverimo Ana Sayfa", url: "https://biverimo.github.io/"},
-  ]
-};
+const sites = [
+  {name: "YouTube", url: "https://www.youtube.com/"},
+  {name: "YouTube Music", url: "https://music.youtube.com/"},
+  {name: "Instagram", url: "https://www.instagram.com/"},
+  {name: "Instagram Explore", url: "https://www.instagram.com/explore/"},
+  {name: "Twitter", url: "https://twitter.com/"},
+  {name: "Facebook", url: "https://www.facebook.com/"},
+  {name: "Gmail", url: "https://mail.google.com/"},
+  {name: "Kayzer", url: "https://www.youtube.com/"},
+  {name: "Orkun Işıtmak", url: "https://www.youtube.com/"},
+  {name: "MrBeast", url: "https://www.youtube.com/"},
+  {name: "Delimine", url: "https://www.youtube.com/"},
+  {name: "Eagle5", url: "https://www.youtube.com/"},
+  {name: "Kızılcık Şerbeti", url: "https://www.youtube.com/"},
+  {name: "Arka Sokaklar", url: "https://www.youtube.com/"},
+  {name: "Sahipsizler", url: "https://www.youtube.com/"}
+];
 
 function search() {
   const query = document.getElementById("search").value.trim().toLowerCase();
@@ -118,10 +116,9 @@ function search() {
 
   if(query === "") return;
 
-  // Önceden tanımlı sonuçlar yoksa default göster
-  let results = predefinedResults[query] || predefinedResults.default;
+  const filtered = sites.filter(site => site.name.toLowerCase().includes(query));
 
-  results.forEach(item => {
+  filtered.forEach(item => {
     const div = document.createElement("div");
     div.className = "result-item";
     div.innerHTML = `<a href="${item.url}" target="_blank">${item.name}</a>`;
@@ -129,10 +126,15 @@ function search() {
   });
 }
 
-// Enter tuşu ile çalışması
+// Autocomplete efekt (yazarken sonuçlar)
+document.getElementById("search").addEventListener("input", search);
+
+// Enter tuşu ile ilk sonucu aç
 document.getElementById("search").addEventListener("keypress", function(e) {
   if(e.key === "Enter") {
-    search();
+    const resultsDiv = document.getElementById("results");
+    const firstLink = resultsDiv.querySelector("a");
+    if(firstLink) firstLink.click();
   }
 });
 </script>
